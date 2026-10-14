@@ -151,19 +151,3 @@ pytest -q
 ### Scope and limitations
 
 This is a **local development MVP**, not production-hardened financial software. The AI flow has not been tested with a live API call in this environment (no user API key was provided). Additional protections such as HTTPS, origin/CSRF validation, per-user AI request rate limits, deployment secrets management and backup procedures are required before exposing it on the public internet.
-
-## Fix for `Unexpected token 'I', "Internal Server Error" is not valid JSON`
-
-This version fixes a reproducible import error when the backend is started from the project root, and makes backend failures show a readable error rather than a JSON parsing error. It does **not** guarantee OpenAI account billing or API-key configuration.
-
-The FastAPI server can now be launched in either style:
-
-```bash
-# From the project root:
-python -m uvicorn backend.app:app --reload --host 127.0.0.1 --port 8000
-
-# OR from inside backend/:
-python -m uvicorn app:app --reload --host 127.0.0.1 --port 8000
-```
-
-Only run one backend server at a time. Check `http://localhost:8000/api/health` (should return JSON with `"status":"ok"`). Try **mock extraction** first to test the app without any OpenAI API call. If mock works but OpenAI does not, check the backend terminal, then verify `backend/.env` includes a real key, billing is configured, and your model supports vision and structured outputs. Do not share your API key or unredacted pay slips.
